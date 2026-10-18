@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ moto.marca.nombre }} {{ moto.modelo }} | Sena Motos</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 20px 7%;
+            border-bottom: 4px solid #e31b23;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #e31b23;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        .moto {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .foto {
+            width: 100%;
+            min-height: 280px;
+            max-height: 450px;
+            object-fit: contain;
+            background: #eee;
+            border-radius: 8px;
+        }
+
+        .sin-foto {
+            min-height: 280px;
+            display: grid;
+            place-items: center;
+            background: #eee;
+            color: #666;
+            border-radius: 8px;
+        }
+
+        .marca {
+            color: #e31b23;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .precio {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .datos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .dato {
+            padding: 15px;
+            background: #f4f4f4;
+            border-radius: 8px;
+        }
+
+        .dato strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+        }
+
+        .descripcion {
+            line-height: 1.7;
+            margin-top: 25px;
+        }
+
+        .boton {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #e31b23;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+            .moto {
+                grid-template-columns: 1fr;
+            }
+
+            .datos {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>SENA MOTOS</h1>
+        <p>Conoce cada detalle de tu próxima motocicleta.</p>
+    </header>
+
+    <main>
+        <article class="moto">
+            <section>
+                {% if moto.imagen_url %}
+                    <img
+                        class="foto"
+                        src="{{ moto.imagen_url }}"
+                        alt="{{ moto.marca.nombre }} {{ moto.modelo }}"
+                    >
+                {% else %}
+                    <div class="sin-foto">
+                        Fotografía próximamente
+                    </div>
+                {% endif %}
+            </section>
+
+            <section>
+                <p class="marca">{{ moto.marca.nombre }}</p>
+                <h2>{{ moto.modelo }} {{ moto.anio }}</h2>
+                <p>{{ moto.get_categoria_display }}</p>
+
+                {% if moto.precio %}
+                    <p class="precio">
+                        ${{ moto.precio|floatformat:0 }}
+                        <small>COP</small>
+                    </p>
+                {% else %}
+                    <p>Precio por consultar</p>
+                {% endif %}
+
+                <div class="datos">
+                    <div class="dato">
+                        <strong>Cilindrada</strong>
+                        {{ moto.cilindrada|default_if_none:"No registrada" }} cc
+                    </div>
+
+                    <div class="dato">
+                        <strong>Potencia</strong>
+                        {{ moto.potencia|default_if_none:"No registrada"|default:"No registrada" }}
+                    </div>
+
+                    <div class="dato">
+                        <strong>Torque</strong>
+                        {{ moto.torque|default:"No registrado" }}
+                    </div>
+
+                    <div class="dato">
+                        <strong>Transmisión</strong>
+                        {{ moto.transmision|default:"No registrada" }}
+                    </div>
+
+                    <div class="dato">
+                        <strong>Refrigeración</strong>
+                        {{ moto.refrigeracion|default:"No registrada" }}
+                    </div>
+
+                    <div class="dato">
+                        <strong>Peso</strong>
+                        {% if moto.peso_kg %}{{ moto.peso_kg }} kg{% else %}No registrado{% endif %}
+                    </div>
+
+                    <div class="dato">
+                        <strong>Tanque</strong>
+                        {% if moto.capacidad_tanque_litros %}{{ moto.capacidad_tanque_litros }} litros{% else %}No registrado{% endif %}
+                    </div>
+
+                    <div class="dato">
+                        <strong>Velocidad máxima</strong>
+                        {% if moto.velocidad_maxima_kmh %}{{ moto.velocidad_maxima_kmh }} km/h{% else %}No registrada{% endif %}
+                    </div>
+                </div>
+            </section>
+        </article>
+
+        {% if moto.descripcion %}
+            <section class="descripcion">
+                <h2>Descripción</h2>
+                <p>{{ moto.descripcion }}</p>
+            </section>
+        {% endif %}
+
+        <a class="boton" href="{% url 'inicio' %}">
+            Volver al catálogo
+        </a>
+    </main>
+</body>
+</html>

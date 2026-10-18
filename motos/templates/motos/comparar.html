@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparar motocicletas | Sena Motos</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 22px 7%;
+            border-bottom: 4px solid #e31b23;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #e31b23;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #222;
+            color: white;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            background: #f7f7f7;
+        }
+
+        .boton {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #e31b23;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .vacio {
+            padding: 30px;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>SENA MOTOS</h1>
+        <p>Compara y encuentra tu próxima motocicleta.</p>
+    </header>
+
+    <main>
+        <h2>Comparación de motocicletas</h2>
+
+        {% if motos %}
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            {% for moto in motos %}
+                                <th>
+                                    {{ moto.marca.nombre }} {{ moto.modelo }}
+                                    ({{ moto.anio }})
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>Precio</td>
+                            {% for moto in motos %}
+                                <td>
+                                    {% if moto.precio %}
+                                        ${{ moto.precio|floatformat:0 }} COP
+                                    {% else %}
+                                        Por consultar
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Categoría</td>
+                            {% for moto in motos %}
+                                <td>{{ moto.get_categoria_display }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Cilindrada</td>
+                            {% for moto in motos %}
+                                <td>
+                                    {% if moto.cilindrada %}{{ moto.cilindrada }} cc{% else %}No registrada{% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Potencia</td>
+                            {% for moto in motos %}
+                                <td>{{ moto.potencia|default:"No registrada" }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Torque</td>
+                            {% for moto in motos %}
+                                <td>{{ moto.torque|default:"No registrado" }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Transmisión</td>
+                            {% for moto in motos %}
+                                <td>{{ moto.transmision|default:"No registrada" }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Refrigeración</td>
+                            {% for moto in motos %}
+                                <td>{{ moto.refrigeracion|default:"No registrada" }}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Peso</td>
+                            {% for moto in motos %}
+                                <td>{% if moto.peso_kg %}{{ moto.peso_kg }} kg{% else %}No registrado{% endif %}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Capacidad del tanque</td>
+                            {% for moto in motos %}
+                                <td>{% if moto.capacidad_tanque_litros %}{{ moto.capacidad_tanque_litros }} litros{% else %}No registrada{% endif %}</td>
+                            {% endfor %}
+                        </tr>
+
+                        <tr>
+                            <td>Altura del asiento</td>
+                            {% for moto in motos %}
+                                <td>{% if moto.altura_asiento_mm %}{{ moto.altura_asiento_mm }} mm{% else %}No registrada{% endif %}</td>
+                            {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="vacio">
+                <h3>No hay motocicletas seleccionadas</h3>
+                <p>Regresa al catálogo y selecciona las motos que deseas comparar.</p>
+            </div>
+        {% endif %}
+
+        <a class="boton" href="{% url 'inicio' %}">
+            Volver al catálogo
+        </a>
+    </main>
+</body>
+</html>

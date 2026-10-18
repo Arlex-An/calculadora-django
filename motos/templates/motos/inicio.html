@@ -1,0 +1,405 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111111">
+    <title>Sena Motos | Catálogo de motocicletas</title>
+    <style>
+        :root {
+            --fondo: #f4f5f7;
+            --oscuro: #111318;
+            --rojo: #d92736;
+            --gris: #666b75;
+            --borde: #e4e6eb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--fondo);
+            color: var(--oscuro);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .barra {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 7%;
+            background: #fff;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 900;
+            letter-spacing: -1px;
+        }
+
+        .logo span { color: var(--rojo); }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .nav a:hover { color: var(--rojo); }
+
+        .admin {
+            padding: 11px 16px;
+            color: white;
+            background: var(--oscuro);
+            border-radius: 6px;
+        }
+
+        .hero {
+            padding: 70px 7%;
+            color: white;
+            background:
+                linear-gradient(90deg, #111318 0%, #111318ee 45%, #11131855 100%),
+                url("https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1800&q=85")
+                center 55% / cover;
+        }
+
+        .etiqueta {
+            color: #ff6975;
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            max-width: 650px;
+            margin: 18px 0;
+            font-size: clamp(38px, 6vw, 68px);
+            line-height: 1.02;
+            letter-spacing: -2px;
+        }
+
+        .hero p {
+            max-width: 520px;
+            color: #d5d7dd;
+            line-height: 1.7;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 13px 19px;
+            margin-top: 15px;
+            color: white;
+            background: var(--rojo);
+            border: 0;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .contenido {
+            width: 86%;
+            max-width: 1450px;
+            margin: 42px auto;
+        }
+
+        .encabezado {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .encabezado h2 { margin: 0 0 8px; font-size: 30px; }
+        .encabezado p { margin: 0; color: var(--gris); }
+
+        .filtros {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            padding: 18px;
+            margin-bottom: 24px;
+            background: white;
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            min-width: 0;
+            padding: 12px;
+            background: white;
+            border: 1px solid #d9dce2;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .filtros .boton { margin: 0; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .tarjeta {
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--borde);
+            border-radius: 10px;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+        .tarjeta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px #15192312;
+        }
+
+        .foto {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 225px;
+            overflow: hidden;
+            background: #e9ebef;
+        }
+
+        .foto img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sin-foto {
+            color: #777d88;
+            font-size: 13px;
+        }
+
+        .tarjeta-cuerpo { padding: 20px; }
+
+        .marca {
+            color: var(--rojo);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .tarjeta h3 { margin: 8px 0; font-size: 22px; }
+
+        .detalles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .chip {
+            padding: 7px 9px;
+            background: #f0f1f4;
+            border-radius: 4px;
+            color: #424650;
+            font-size: 12px;
+        }
+
+        .precio { font-size: 22px; font-weight: 900; }
+        .precio small { color: var(--gris); font-size: 12px; font-weight: normal; }
+
+        .acciones {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .enlace { color: var(--rojo); font-size: 14px; font-weight: bold; }
+
+        .comparar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+
+        .comparar input { width: auto; }
+
+        .vacio {
+            padding: 45px 20px;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            color: var(--gris);
+        }
+
+        footer {
+            padding: 30px 7%;
+            margin-top: 60px;
+            background: var(--oscuro);
+            color: #c5c7ce;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 1000px) {
+            .filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 620px) {
+            .barra { padding: 18px 5%; flex-wrap: wrap; }
+            .nav { gap: 13px; font-size: 12px; }
+            .hero { padding: 55px 6%; }
+            .contenido { width: 92%; }
+            .encabezado { align-items: start; flex-direction: column; }
+            .filtros, .grid { grid-template-columns: 1fr; }
+            .foto { height: 230px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="barra">
+        <a class="logo" href="{% url 'inicio' %}">SENA<span>MOTOS</span></a>
+        <nav class="nav">
+            <a href="{% url 'inicio' %}">Catálogo</a>
+            <a href="#catalogo">Modelos</a>
+            <a class="admin" href="/admin/">Administrar</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="etiqueta">Encuentra tu próxima moto</div>
+        <h1>Tu camino.<br>Tu máquina.</h1>
+        <p>
+            Explora motocicletas de diferentes marcas, compara sus características
+            y encuentra el modelo que se adapta a tu estilo.
+        </p>
+        <a href="#catalogo" class="boton">Explorar catálogo →</a>
+    </section>
+
+    <main class="contenido" id="catalogo">
+        <div class="encabezado">
+            <div>
+                <h2>Explora las motocicletas</h2>
+                <p>Encuentra información y especificaciones de cada modelo.</p>
+            </div>
+            <span>{{ motos|length }} modelos encontrados</span>
+        </div>
+
+        <form method="get" class="filtros">
+            <input
+                type="search"
+                name="q"
+                placeholder="Buscar marca o modelo..."
+                value="{{ busqueda }}"
+            >
+
+            <select name="marca">
+                <option value="">Todas las marcas</option>
+                {% for marca in marcas %}
+                    <option value="{{ marca.id }}"
+                        {% if marca_seleccionada == marca.id|stringformat:"s" %}selected{% endif %}>
+                        {{ marca.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select name="categoria">
+                <option value="">Todas las categorías</option>
+                {% for valor, etiqueta in categorias %}
+                    <option value="{{ valor }}"
+                        {% if categoria_seleccionada == valor %}selected{% endif %}>
+                        {{ etiqueta }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select name="cilindrada">
+                <option value="">Cualquier cilindrada</option>
+                <option value="125" {% if cilindrada_seleccionada == "125" %}selected{% endif %}>Hasta 149 cc</option>
+                <option value="150" {% if cilindrada_seleccionada == "150" %}selected{% endif %}>150–249 cc</option>
+                <option value="250" {% if cilindrada_seleccionada == "250" %}selected{% endif %}>250–499 cc</option>
+                <option value="500" {% if cilindrada_seleccionada == "500" %}selected{% endif %}>500 cc o más</option>
+            </select>
+
+            <button class="boton" type="submit">Filtrar</button>
+        </form>
+
+        {% if motos %}
+            <form action="{% url 'comparar_motos' %}" method="get">
+                <div class="grid">
+                    {% for moto in motos %}
+                        <article class="tarjeta">
+                            <a href="{% url 'detalle_moto' moto.id %}" class="foto">
+                                {% if moto.imagen_url %}
+                                    <img
+                                        src="{{ moto.imagen_url }}"
+                                        alt="{{ moto.marca.nombre }} {{ moto.modelo }}"
+                                        loading="lazy"
+                                    >
+                                {% else %}
+                                    <span class="sin-foto">Fotografía pendiente</span>
+                                {% endif %}
+                            </a>
+
+                            <div class="tarjeta-cuerpo">
+                                <div class="marca">{{ moto.marca.nombre }}</div>
+                                <h3>{{ moto.modelo }}</h3>
+                                <div class="detalles">
+                                    <span class="chip">{{ moto.anio }}</span>
+                                    {% if moto.cilindrada %}
+                                        <span class="chip">{{ moto.cilindrada }} cc</span>
+                                    {% endif %}
+                                    <span class="chip">{{ moto.get_categoria_display }}</span>
+                                </div>
+
+                                <div class="precio">
+                                    {% if moto.precio %}
+                                        ${{ moto.precio|floatformat:0 }}
+                                        <small>COP, precio registrado</small>
+                                    {% else %}
+                                        <small>Precio por consultar</small>
+                                    {% endif %}
+                                </div>
+
+                                <div class="acciones">
+                                    <a class="enlace" href="{% url 'detalle_moto' moto.id %}">
+                                        Ver ficha técnica →
+                                    </a>
+                                    <label class="comparar">
+                                        <input type="checkbox" name="moto" value="{{ moto.id }}">
+                                        Comparar
+                                    </label>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+
+                <button class="boton" type="submit">Comparar seleccionadas</button>
+            </form>
+        {% else %}
+            <div class="vacio">
+                <h3>Aún no encontramos motocicletas</h3>
+                <p>Prueba otros filtros o agrega los primeros modelos desde el panel de administración.</p>
+                <a class="boton" href="/admin/">Agregar motocicletas</a>
+            </div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <strong>SENA MOTOS</strong>
+        <p>Catálogo informativo de motocicletas multimarca.</p>
+        <p>Los precios y especificaciones deben verificarse con cada fabricante o distribuidor.</p>
+    </footer>
+</body>
+</html>

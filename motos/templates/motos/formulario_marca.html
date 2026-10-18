@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar marca | Sena Motos</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f8;
+            color: #20252b;
+        }
+
+        header {
+            background: #15191f;
+            color: white;
+            padding: 24px 5%;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+            color: #cbd0d7;
+        }
+
+        main {
+            width: min(650px, 92%);
+            margin: 35px auto;
+        }
+
+        .formulario {
+            background: white;
+            padding: 26px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #0000000d;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd2da;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        .error {
+            color: #b42318;
+            font-size: 14px;
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            background: #16834a;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .volver {
+            background: #505862;
+        }
+
+        .boton:hover {
+            opacity: 0.85;
+        }
+
+        .ayuda {
+            color: #68717c;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>
+            {% if form.instance.pk %}
+                Editar marca
+            {% else %}
+                Registrar marca
+            {% endif %}
+        </h1>
+        <p>Agrega los datos de una marca de motocicletas.</p>
+    </header>
+
+    <main>
+        <section class="formulario">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="error">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="campo">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <span class="ayuda">{{ field.help_text }}</span>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="acciones">
+                    <button type="submit" class="boton">
+                        Guardar marca
+                    </button>
+
+                    <a href="{% url 'gestionar_motos' %}" class="boton volver">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

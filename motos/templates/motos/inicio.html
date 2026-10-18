@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -62,6 +61,11 @@
             border-radius: 6px;
         }
 
+        .admin:hover {
+            color: white !important;
+            background: var(--rojo);
+        }
+
         .hero {
             padding: 70px 7%;
             color: white;
@@ -119,8 +123,15 @@
             margin-bottom: 24px;
         }
 
-        .encabezado h2 { margin: 0 0 8px; font-size: 30px; }
-        .encabezado p { margin: 0; color: var(--gris); }
+        .encabezado h2 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .encabezado p {
+            margin: 0;
+            color: var(--gris);
+        }
 
         .filtros {
             display: grid;
@@ -194,7 +205,10 @@
             letter-spacing: 1.5px;
         }
 
-        .tarjeta h3 { margin: 8px 0; font-size: 22px; }
+        .tarjeta h3 {
+            margin: 8px 0;
+            font-size: 22px;
+        }
 
         .detalles {
             display: flex;
@@ -211,8 +225,16 @@
             font-size: 12px;
         }
 
-        .precio { font-size: 22px; font-weight: 900; }
-        .precio small { color: var(--gris); font-size: 12px; font-weight: normal; }
+        .precio {
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .precio small {
+            color: var(--gris);
+            font-size: 12px;
+            font-weight: normal;
+        }
 
         .acciones {
             display: flex;
@@ -222,7 +244,11 @@
             margin-top: 16px;
         }
 
-        .enlace { color: var(--rojo); font-size: 14px; font-weight: bold; }
+        .enlace {
+            color: var(--rojo);
+            font-size: 14px;
+            font-weight: bold;
+        }
 
         .comparar {
             display: flex;
@@ -251,38 +277,70 @@
         }
 
         @media (max-width: 1000px) {
-            .filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .filtros {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
 
         @media (max-width: 620px) {
-            .barra { padding: 18px 5%; flex-wrap: wrap; }
-            .nav { gap: 13px; font-size: 12px; }
+            .barra {
+                padding: 18px 5%;
+                flex-wrap: wrap;
+            }
+
+            .nav {
+                gap: 13px;
+                font-size: 12px;
+            }
+
             .hero { padding: 55px 6%; }
+
             .contenido { width: 92%; }
-            .encabezado { align-items: start; flex-direction: column; }
-            .filtros, .grid { grid-template-columns: 1fr; }
+
+            .encabezado {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .filtros, .grid {
+                grid-template-columns: 1fr;
+            }
+
             .foto { height: 230px; }
         }
     </style>
 </head>
+
 <body>
     <header class="barra">
-        <a class="logo" href="{% url 'inicio' %}">SENA<span>MOTOS</span></a>
+        <a class="logo" href="{% url 'inicio' %}">
+            SENA<span>MOTOS</span>
+        </a>
+
         <nav class="nav">
             <a href="{% url 'inicio' %}">Catálogo</a>
             <a href="#catalogo">Modelos</a>
-            <a class="admin" href="/admin/">Administrar</a>
+
+            <!-- Acceso al panel de gestión de motocicletas -->
+            <a class="admin" href="{% url 'gestionar_motos' %}">
+                Administrar
+            </a>
         </nav>
     </header>
 
     <section class="hero">
         <div class="etiqueta">Encuentra tu próxima moto</div>
         <h1>Tu camino.<br>Tu máquina.</h1>
+
         <p>
             Explora motocicletas de diferentes marcas, compara sus características
             y encuentra el modelo que se adapta a tu estilo.
         </p>
+
         <a href="#catalogo" class="boton">Explorar catálogo →</a>
     </section>
 
@@ -292,6 +350,7 @@
                 <h2>Explora las motocicletas</h2>
                 <p>Encuentra información y especificaciones de cada modelo.</p>
             </div>
+
             <span>{{ motos|length }} modelos encontrados</span>
         </div>
 
@@ -305,9 +364,12 @@
 
             <select name="marca">
                 <option value="">Todas las marcas</option>
+
                 {% for marca in marcas %}
-                    <option value="{{ marca.id }}"
-                        {% if marca_seleccionada == marca.id|stringformat:"s" %}selected{% endif %}>
+                    <option
+                        value="{{ marca.id }}"
+                        {% if marca_seleccionada == marca.id|stringformat:"s" %}selected{% endif %}
+                    >
                         {{ marca.nombre }}
                     </option>
                 {% endfor %}
@@ -315,9 +377,12 @@
 
             <select name="categoria">
                 <option value="">Todas las categorías</option>
+
                 {% for valor, etiqueta in categorias %}
-                    <option value="{{ valor }}"
-                        {% if categoria_seleccionada == valor %}selected{% endif %}>
+                    <option
+                        value="{{ valor }}"
+                        {% if categoria_seleccionada == valor %}selected{% endif %}
+                    >
                         {{ etiqueta }}
                     </option>
                 {% endfor %}
@@ -339,7 +404,10 @@
                 <div class="grid">
                     {% for moto in motos %}
                         <article class="tarjeta">
-                            <a href="{% url 'detalle_moto' moto.id %}" class="foto">
+                            <a
+                                href="{% url 'detalle_moto' moto.id %}"
+                                class="foto"
+                            >
                                 {% if moto.imagen_url %}
                                     <img
                                         src="{{ moto.imagen_url }}"
@@ -347,19 +415,29 @@
                                         loading="lazy"
                                     >
                                 {% else %}
-                                    <span class="sin-foto">Fotografía pendiente</span>
+                                    <span class="sin-foto">
+                                        Fotografía pendiente
+                                    </span>
                                 {% endif %}
                             </a>
 
                             <div class="tarjeta-cuerpo">
                                 <div class="marca">{{ moto.marca.nombre }}</div>
+
                                 <h3>{{ moto.modelo }}</h3>
+
                                 <div class="detalles">
                                     <span class="chip">{{ moto.anio }}</span>
+
                                     {% if moto.cilindrada %}
-                                        <span class="chip">{{ moto.cilindrada }} cc</span>
+                                        <span class="chip">
+                                            {{ moto.cilindrada }} cc
+                                        </span>
                                     {% endif %}
-                                    <span class="chip">{{ moto.get_categoria_display }}</span>
+
+                                    <span class="chip">
+                                        {{ moto.get_categoria_display }}
+                                    </span>
                                 </div>
 
                                 <div class="precio">
@@ -372,11 +450,19 @@
                                 </div>
 
                                 <div class="acciones">
-                                    <a class="enlace" href="{% url 'detalle_moto' moto.id %}">
+                                    <a
+                                        class="enlace"
+                                        href="{% url 'detalle_moto' moto.id %}"
+                                    >
                                         Ver ficha técnica →
                                     </a>
+
                                     <label class="comparar">
-                                        <input type="checkbox" name="moto" value="{{ moto.id }}">
+                                        <input
+                                            type="checkbox"
+                                            name="moto"
+                                            value="{{ moto.id }}"
+                                        >
                                         Comparar
                                     </label>
                                 </div>
@@ -385,13 +471,25 @@
                     {% endfor %}
                 </div>
 
-                <button class="boton" type="submit">Comparar seleccionadas</button>
+                <button class="boton" type="submit">
+                    Comparar seleccionadas
+                </button>
             </form>
         {% else %}
             <div class="vacio">
                 <h3>Aún no encontramos motocicletas</h3>
-                <p>Prueba otros filtros o agrega los primeros modelos desde el panel de administración.</p>
-                <a class="boton" href="/admin/">Agregar motocicletas</a>
+
+                <p>
+                    Prueba otros filtros o agrega los primeros modelos
+                    desde el panel de gestión.
+                </p>
+
+                <a
+                    class="boton"
+                    href="{% url 'gestionar_motos' %}"
+                >
+                    Agregar motocicletas
+                </a>
             </div>
         {% endif %}
     </main>
@@ -399,7 +497,10 @@
     <footer>
         <strong>SENA MOTOS</strong>
         <p>Catálogo informativo de motocicletas multimarca.</p>
-        <p>Los precios y especificaciones deben verificarse con cada fabricante o distribuidor.</p>
+        <p>
+            Los precios y especificaciones deben verificarse con cada
+            fabricante o distribuidor.
+        </p>
     </footer>
 </body>
 </html>

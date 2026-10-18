@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar motocicletas | Sena Motos</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f8;
+            color: #20252b;
+        }
+
+        header {
+            background: #15191f;
+            color: white;
+            padding: 24px 5%;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+            color: #cbd0d7;
+        }
+
+        main {
+            width: min(1100px, 92%);
+            margin: 30px auto;
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 12px 17px;
+            border: 0;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            background: #1769aa;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            opacity: 0.85;
+        }
+
+        .verde {
+            background: #16834a;
+        }
+
+        .rojo {
+            background: #c0392b;
+        }
+
+        .gris {
+            background: #505862;
+        }
+
+        .seccion {
+            background: white;
+            padding: 22px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px #0000000d;
+        }
+
+        .seccion h2 {
+            margin-top: 0;
+        }
+
+        .tabla-contenedor {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e4e7eb;
+        }
+
+        th {
+            background: #f0f2f5;
+        }
+
+        .mensajes {
+            padding: 14px;
+            margin-bottom: 20px;
+            background: #dff5e7;
+            color: #155d32;
+            border-radius: 7px;
+        }
+
+        .vacio {
+            color: #69717b;
+            padding: 15px 0;
+        }
+
+        .acciones-tabla {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+        .acciones-tabla .boton {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #69717b;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Panel de gestión</h1>
+        <p>Administra las marcas y motocicletas de Sena Motos.</p>
+    </header>
+
+    <main>
+        {% if messages %}
+            {% for mensaje in messages %}
+                <div class="mensajes">{{ mensaje }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="acciones">
+            <a href="{% url 'inicio' %}" class="boton gris">
+                Volver al catálogo
+            </a>
+
+            <a href="{% url 'crear_marca' %}" class="boton verde">
+                + Registrar marca
+            </a>
+
+            <a href="{% url 'crear_motocicleta' %}" class="boton">
+                + Registrar motocicleta
+            </a>
+        </div>
+
+        <section class="seccion">
+            <h2>Marcas registradas</h2>
+
+            {% if marcas %}
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>País de origen</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for marca in marcas %}
+                                <tr>
+                                    <td>{{ marca.nombre }}</td>
+                                    <td>{{ marca.pais_origen|default:"No indicado" }}</td>
+                                    <td>
+                                        <div class="acciones-tabla">
+                                            <a
+                                                href="{% url 'editar_marca' marca.id %}"
+                                                class="boton"
+                                            >Editar</a>
+
+                                            <a
+                                                href="{% url 'eliminar_marca' marca.id %}"
+                                                class="boton rojo"
+                                            >Eliminar</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="vacio">Todavía no hay marcas registradas.</p>
+            {% endif %}
+        </section>
+
+        <section class="seccion">
+            <h2>Motocicletas registradas</h2>
+
+            {% if motocicletas %}
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Año</th>
+                                <th>Cilindrada</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for moto in motocicletas %}
+                                <tr>
+                                    <td>{{ moto.marca.nombre }}</td>
+                                    <td>{{ moto.modelo }}</td>
+                                    <td>{{ moto.anio }}</td>
+                                    <td>
+                                        {% if moto.cilindrada %}
+                                            {{ moto.cilindrada }} cc
+                                        {% else %}
+                                            No indicada
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if moto.disponible %}
+                                            Disponible
+                                        {% else %}
+                                            No disponible
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="acciones-tabla">
+                                            <a
+                                                href="{% url 'editar_motocicleta' moto.id %}"
+                                                class="boton"
+                                            >Editar</a>
+
+                                            <a
+                                                href="{% url 'eliminar_motocicleta' moto.id %}"
+                                                class="boton rojo"
+                                            >Eliminar</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="vacio">
+                    Todavía no hay motocicletas registradas.
+                </p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        Sena Motos · Panel de gestión
+    </footer>
+</body>
+</html>

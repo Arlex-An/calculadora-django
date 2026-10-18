@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar motocicleta | Sena Motos</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f8;
+            color: #20252b;
+        }
+
+        header {
+            background: #15191f;
+            color: white;
+            padding: 24px 5%;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+            color: #cbd0d7;
+        }
+
+        main {
+            width: min(1000px, 92%);
+            margin: 30px auto;
+        }
+
+        .formulario {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px #0000000d;
+        }
+
+        .campos {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .completo {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input:not([type="checkbox"]),
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccd2da;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .casilla {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ayuda {
+            color: #68717c;
+            font-size: 13px;
+        }
+
+        .error {
+            color: #b42318;
+            font-size: 14px;
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 7px;
+            text-decoration: none;
+            color: white;
+            background: #1769aa;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .guardar {
+            background: #16834a;
+        }
+
+        .volver {
+            background: #505862;
+        }
+
+        .boton:hover {
+            opacity: 0.85;
+        }
+
+        @media (max-width: 650px) {
+            .campos {
+                grid-template-columns: 1fr;
+            }
+
+            .completo {
+                grid-column: auto;
+            }
+
+            .formulario {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>
+            {% if form.instance.pk %}
+                Editar motocicleta
+            {% else %}
+                Registrar motocicleta
+            {% endif %}
+        </h1>
+        <p>Completa la información de la motocicleta.</p>
+    </header>
+
+    <main>
+        <section class="formulario">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="error">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="campos">
+                    {% for field in form %}
+                        <div class="campo {% if field.name == 'descripcion' %}completo{% endif %}">
+                            {% if field.name == 'destacado' or field.name == 'disponible' %}
+                                <div class="casilla">
+                                    {{ field }}
+                                    <label for="{{ field.id_for_label }}">
+                                        {{ field.label }}
+                                    </label>
+                                </div>
+                            {% else %}
+                                <label for="{{ field.id_for_label }}">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <span class="ayuda">{{ field.help_text }}</span>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <span class="error">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="acciones">
+                    <button type="submit" class="boton guardar">
+                        Guardar motocicleta
+                    </button>
+
+                    <a href="{% url 'gestionar_motos' %}" class="boton volver">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

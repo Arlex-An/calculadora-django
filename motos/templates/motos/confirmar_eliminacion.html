@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar eliminación | Sena Motos</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f3f5f8;
+            color: #20252b;
+        }
+
+        .contenedor {
+            width: min(520px, 100%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px #00000012;
+            text-align: center;
+        }
+
+        .icono {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .advertencia {
+            color: #a93226;
+            line-height: 1.6;
+        }
+
+        .acciones {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 7px;
+            color: white;
+            background: #505862;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .eliminar {
+            background: #c0392b;
+        }
+
+        .boton:hover {
+            opacity: 0.85;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="contenedor">
+        <div class="icono">⚠️</div>
+
+        <h1>Confirmar eliminación</h1>
+
+        <p>
+            ¿Estás seguro de que deseas eliminar este registro?
+        </p>
+
+        <p>
+            <strong>{{ objeto }}</strong>
+        </p>
+
+        <p class="advertencia">
+            Esta acción no se puede deshacer.
+        </p>
+
+        <div class="acciones">
+            <a href="{% url 'gestionar_motos' %}" class="boton">
+                Cancelar
+            </a>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="boton eliminar">
+                    Sí, eliminar
+                </button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

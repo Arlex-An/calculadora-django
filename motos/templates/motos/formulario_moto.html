@@ -4,7 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar motocicleta | Sena Motos</title>
+
+    <title>
+        {% if form.instance.pk %}
+            Editar motocicleta
+        {% else %}
+            Registrar motocicleta
+        {% endif %}
+        | Sena Motos
+    </title>
 
     <style>
         * {
@@ -55,6 +63,7 @@
             display: flex;
             flex-direction: column;
             gap: 7px;
+            min-width: 0;
         }
 
         .completo {
@@ -80,6 +89,10 @@
             height: 18px;
         }
 
+        input[type="file"] {
+            background: #fff;
+        }
+
         .casilla {
             display: flex;
             align-items: center;
@@ -89,11 +102,60 @@
         .ayuda {
             color: #68717c;
             font-size: 13px;
+            line-height: 1.5;
         }
 
         .error {
             color: #b42318;
             font-size: 14px;
+        }
+
+        .audio-actual {
+            padding: 12px;
+            background: #f3f5f8;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .audio-actual audio {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            margin-top: 8px;
+        }
+
+        .pdf-actual {
+            padding: 12px;
+            background: #f0f6ff;
+            border-left: 4px solid #1769aa;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .pdf-actual a {
+            display: inline-block;
+            margin-top: 8px;
+            color: #1769aa;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .pdf-actual a:hover {
+            text-decoration: underline;
+        }
+
+        .imagen-3d-info {
+            padding: 12px;
+            background: #f0f6ff;
+            border-left: 4px solid #1769aa;
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+
+        .imagen-3d-info strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #1769aa;
         }
 
         .acciones {
@@ -153,12 +215,14 @@
                 Registrar motocicleta
             {% endif %}
         </h1>
+
         <p>Completa la información de la motocicleta.</p>
     </header>
 
     <main>
         <section class="formulario">
-            <form method="post">
+
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 {% if form.non_field_errors %}
@@ -168,31 +232,106 @@
                 {% endif %}
 
                 <div class="campos">
+
                     {% for field in form %}
-                        <div class="campo {% if field.name == 'descripcion' %}completo{% endif %}">
+                        <div class="campo {% if field.name == 'descripcion' or field.name == 'sonido_motor' or field.name == 'imagen_3d' or field.name == 'ficha_pdf' %}completo{% endif %}">
+
                             {% if field.name == 'destacado' or field.name == 'disponible' %}
+
                                 <div class="casilla">
                                     {{ field }}
+
                                     <label for="{{ field.id_for_label }}">
                                         {{ field.label }}
                                     </label>
                                 </div>
+
                             {% else %}
+
                                 <label for="{{ field.id_for_label }}">
                                     {{ field.label }}
                                 </label>
+
                                 {{ field }}
+
+                            {% endif %}
+
+                            {% if field.name == 'imagen_3d' %}
+                                <div class="imagen-3d-info">
+                                    <strong>Imagen 3D de la motocicleta</strong>
+
+                                    <span class="ayuda">
+                                        Introduce una URL directa a la imagen que corresponda
+                                        a este modelo de motocicleta. Este campo es opcional.
+                                        Por ejemplo: https://ejemplo.com/moto-3d.png
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            {% if field.name == 'imagen_url' %}
+                                <span class="ayuda">
+                                    URL de la fotografía principal de la motocicleta.
+                                </span>
+                            {% endif %}
+
+                            {% if field.name == 'sonido_motor' %}
+                                <span class="ayuda">
+                                    Formatos de audio habituales: MP3 o WAV.
+                                    Puedes dejar este campo vacío si todavía no tienes el sonido.
+                                </span>
+
+                                {% if form.instance.sonido_motor %}
+                                    <div class="audio-actual">
+                                        <strong>Sonido actualmente guardado</strong>
+
+                                        <audio controls preload="none">
+                                            <source src="{{ form.instance.sonido_motor.url }}">
+                                            Tu navegador no puede reproducir este audio.
+                                        </audio>
+
+                                        <span class="ayuda">
+                                            Si no seleccionas otro archivo, se conservará el sonido actual.
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if field.name == 'ficha_pdf' %}
+                                <span class="ayuda">
+                                    Adjunta la ficha técnica en formato PDF.
+                                    Este documento es opcional.
+                                    Si estás editando una motocicleta y no seleccionas
+                                    otro archivo, se conservará el PDF actual.
+                                </span>
+
+                                {% if form.instance.ficha_pdf %}
+                                    <div class="pdf-actual">
+                                        <strong>Ficha técnica actualmente guardada</strong>
+
+                                        <br>
+
+                                        <a href="{{ form.instance.ficha_pdf.url }}"
+                                           target="_blank"
+                                           rel="noopener noreferrer">
+                                            Ver ficha técnica PDF
+                                        </a>
+                                    </div>
+                                {% endif %}
                             {% endif %}
 
                             {% if field.help_text %}
-                                <span class="ayuda">{{ field.help_text }}</span>
+                                <span class="ayuda">
+                                    {{ field.help_text }}
+                                </span>
                             {% endif %}
 
                             {% for error in field.errors %}
                                 <span class="error">{{ error }}</span>
                             {% endfor %}
+
                         </div>
                     {% endfor %}
+
                 </div>
 
                 <div class="acciones">
@@ -205,6 +344,7 @@
                     </a>
                 </div>
             </form>
+
         </section>
     </main>
 </body>

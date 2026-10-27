@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>{{ moto.marca.nombre }} {{ moto.modelo }} | Sena Motos</title>
 
     <style>
@@ -45,7 +46,15 @@
             border-radius: 12px;
         }
 
+        .galeria-moto {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            min-width: 0;
+        }
+
         .foto {
+            display: block;
             width: 100%;
             min-height: 280px;
             max-height: 450px;
@@ -61,6 +70,46 @@
             background: #eee;
             color: #666;
             border-radius: 8px;
+        }
+
+        /* Contenedor 3D transparente y sin bordes */
+        .imagen-3d-contenedor {
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            text-align: center;
+            min-width: 0;
+            width: 100%;
+        }
+
+        /* Visor interactivo de Sketchfab */
+        .visor-3d {
+            display: block;
+            width: 100%;
+            height: 420px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+        }
+
+        /* Crédito de Sketchfab */
+        .credito-3d {
+            margin: 10px 0 0;
+            font-size: 13px;
+            color: #555;
+            text-align: center;
+        }
+
+        .credito-3d a {
+            color: #1CAAD9;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .credito-3d a:hover {
+            text-decoration: underline;
         }
 
         .marca {
@@ -96,6 +145,9 @@
         .descripcion {
             line-height: 1.7;
             margin-top: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
         }
 
         .boton {
@@ -109,13 +161,94 @@
             font-weight: bold;
         }
 
+        .boton:hover {
+            background: #b9151b;
+        }
+
+        /* Sección de la ficha técnica en PDF */
+        .ficha-pdf {
+            margin-top: 25px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid #e31b23;
+        }
+
+        .ficha-pdf h2 {
+            margin-top: 0;
+            color: #222;
+        }
+
+        .ficha-pdf p {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        /* Botón para ver el PDF */
+        .boton-pdf {
+            display: inline-block;
+            margin: 10px 10px 0 0;
+            padding: 12px 18px;
+            background: #e31b23;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .boton-pdf:hover {
+            background: #b9151b;
+        }
+
+        /* Botón para descargar el PDF */
+        .boton-descargar {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 12px 18px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .boton-descargar:hover {
+            background: #444;
+        }
+
         @media (max-width: 700px) {
+            main {
+                margin: 15px auto;
+                padding: 12px;
+            }
+
             .moto {
                 grid-template-columns: 1fr;
+                padding: 16px;
+                gap: 25px;
             }
 
             .datos {
                 grid-template-columns: 1fr;
+            }
+
+            .foto {
+                min-height: 220px;
+            }
+
+            .visor-3d {
+                height: 320px;
+            }
+
+            .ficha-pdf {
+                padding: 18px;
+            }
+
+            .boton-pdf,
+            .boton-descargar {
+                display: block;
+                text-align: center;
+                margin-right: 0;
             }
         }
     </style>
@@ -129,23 +262,51 @@
 
     <main>
         <article class="moto">
-            <section>
-                {% if moto.imagen_url %}
-                    <img
-                        class="foto"
-                        src="{{ moto.imagen_url }}"
-                        alt="{{ moto.marca.nombre }} {{ moto.modelo }}"
-                    >
-                {% else %}
-                    <div class="sin-foto">
-                        Fotografía próximamente
+
+            <!-- Fotografías y visor 3D -->
+            <section class="galeria-moto">
+
+                <div>
+                    <h3>Fotografía de la motocicleta</h3>
+
+                    {% if moto.imagen_url %}
+                        <img
+                            class="foto"
+                            src="{{ moto.imagen_url }}"
+                            alt="Fotografía de {{ moto.marca.nombre }} {{ moto.modelo }}"
+                        >
+                    {% else %}
+                        <div class="sin-foto">
+                            Fotografía próximamente
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Modelo 3D interactivo de Sketchfab -->
+                {% if moto.imagen_3d %}
+                    <div class="imagen-3d-contenedor">
+
+                        <iframe
+                            class="visor-3d"
+                            title="Modelo 3D de {{ moto.marca.nombre }} {{ moto.modelo }}"
+                            src="{{ moto.imagen_3d }}"
+                            frameborder="0"
+                            allow="autoplay; fullscreen; xr-spatial-tracking"
+                            allowfullscreen
+                            loading="lazy">
+                        </iframe>
+
                     </div>
                 {% endif %}
+
             </section>
 
+            <!-- Información técnica -->
             <section>
                 <p class="marca">{{ moto.marca.nombre }}</p>
+
                 <h2>{{ moto.modelo }} {{ moto.anio }}</h2>
+
                 <p>{{ moto.get_categoria_display }}</p>
 
                 {% if moto.precio %}
@@ -158,6 +319,7 @@
                 {% endif %}
 
                 <div class="datos">
+
                     <div class="dato">
                         <strong>Cilindrada</strong>
                         {{ moto.cilindrada|default_if_none:"No registrada" }} cc
@@ -185,22 +347,37 @@
 
                     <div class="dato">
                         <strong>Peso</strong>
-                        {% if moto.peso_kg %}{{ moto.peso_kg }} kg{% else %}No registrado{% endif %}
+                        {% if moto.peso_kg %}
+                            {{ moto.peso_kg }} kg
+                        {% else %}
+                            No registrado
+                        {% endif %}
                     </div>
 
                     <div class="dato">
                         <strong>Tanque</strong>
-                        {% if moto.capacidad_tanque_litros %}{{ moto.capacidad_tanque_litros }} litros{% else %}No registrado{% endif %}
+                        {% if moto.capacidad_tanque_litros %}
+                            {{ moto.capacidad_tanque_litros }} litros
+                        {% else %}
+                            No registrado
+                        {% endif %}
                     </div>
 
                     <div class="dato">
                         <strong>Velocidad máxima</strong>
-                        {% if moto.velocidad_maxima_kmh %}{{ moto.velocidad_maxima_kmh }} km/h{% else %}No registrada{% endif %}
+                        {% if moto.velocidad_maxima_kmh %}
+                            {{ moto.velocidad_maxima_kmh }} km/h
+                        {% else %}
+                            No registrada
+                        {% endif %}
                     </div>
+
                 </div>
             </section>
+
         </article>
 
+        <!-- Descripción de la motocicleta -->
         {% if moto.descripcion %}
             <section class="descripcion">
                 <h2>Descripción</h2>
@@ -208,9 +385,38 @@
             </section>
         {% endif %}
 
+        <!-- Ficha técnica en PDF -->
+        {% if moto.ficha_pdf %}
+            <section class="ficha-pdf">
+                <h2>Ficha técnica en PDF</h2>
+
+                <p>
+                    Consulta o descarga el documento técnico
+                    de esta motocicleta.
+                </p>
+
+                <a
+                    class="boton-pdf"
+                    href="{{ moto.ficha_pdf.url }}"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Ver ficha técnica PDF →
+                </a>
+
+                <a
+                    class="boton-descargar"
+                    href="{{ moto.ficha_pdf.url }}"
+                    download>
+                    Descargar PDF
+                </a>
+            </section>
+        {% endif %}
+
+        <!-- Volver al catálogo -->
         <a class="boton" href="{% url 'inicio' %}">
             Volver al catálogo
         </a>
+
     </main>
 </body>
 </html>

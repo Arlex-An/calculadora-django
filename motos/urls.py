@@ -44,4 +44,6 @@ urlpatterns = [
         views.eliminar_motocicleta,
         name="eliminar_motocicleta",
     ),
+    path("ubicacion/", views.ubicacion, name="ubicacion"),
+
 ]

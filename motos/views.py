@@ -1,4 +1,3 @@
-
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -96,10 +95,8 @@ def comparar(request):
 
 
 # ==========================================================
-# PANEL PRIVADO DE GESTIÓN
-# Solo usuarios autenticados con permiso de personal
+# PANEL DE GESTIÓN
 # ==========================================================
-
 
 def gestionar(request):
     marcas = Marca.objects.all().order_by("nombre")
@@ -121,7 +118,6 @@ def gestionar(request):
 # ==========================================================
 # REGISTRAR MARCAS
 # ==========================================================
-
 
 def crear_marca(request):
     form = MarcaForm(request.POST or None)
@@ -215,11 +211,14 @@ def eliminar_marca(request, marca_id):
 
 # ==========================================================
 # REGISTRAR MOTOCICLETAS
+# Incluye la carga de archivos de sonido
 # ==========================================================
 
-
 def crear_motocicleta(request):
-    form = MotocicletaForm(request.POST or None)
+    form = MotocicletaForm(
+        request.POST or None,
+        request.FILES or None,
+    )
 
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -243,6 +242,7 @@ def crear_motocicleta(request):
 
 # ==========================================================
 # EDITAR MOTOCICLETAS
+# Permite adjuntar o cambiar el sonido del motor
 # ==========================================================
 
 def editar_motocicleta(request, moto_id):
@@ -253,6 +253,7 @@ def editar_motocicleta(request, moto_id):
 
     form = MotocicletaForm(
         request.POST or None,
+        request.FILES or None,
         instance=moto,
     )
 
@@ -280,7 +281,6 @@ def editar_motocicleta(request, moto_id):
 # ELIMINAR MOTOCICLETAS
 # ==========================================================
 
-
 def eliminar_motocicleta(request, moto_id):
     moto = get_object_or_404(
         Motocicleta,
@@ -305,3 +305,6 @@ def eliminar_motocicleta(request, moto_id):
             "tipo": "motocicleta",
         },
     )
+
+def ubicacion(request):
+    return render(request, "motos/ubicacion.html")

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Nuestra ubicación | SENA MOTOS</title>
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin=""
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 20px 7%;
+            border-bottom: 4px solid #e31b23;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #e31b23;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #e31b23;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+
+        .panel {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .introduccion {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .datos-negocio {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f8f8;
+            border-left: 4px solid #e31b23;
+            border-radius: 8px;
+        }
+
+        .datos-negocio h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+
+        .datos-negocio p {
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .datos-negocio a:not(.boton) {
+            color: #c4161c;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .datos-negocio a:not(.boton):hover {
+            text-decoration: underline;
+        }
+
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #e31b23;
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .boton:hover {
+            background: #b9151b;
+        }
+
+        .boton-secundario {
+            background: #222;
+        }
+
+        .boton-secundario:hover {
+            background: #444;
+        }
+
+        #mapa {
+            width: 100%;
+            height: 480px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            z-index: 1;
+            background: #e8e8e8;
+        }
+
+        #estado {
+            padding: 12px;
+            margin: 15px 0;
+            background: #f4f4f4;
+            border-radius: 6px;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .nota {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        footer {
+            padding: 20px;
+            background: #111;
+            color: #ccc;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            main {
+                margin: 15px auto;
+                padding: 12px;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
+            #mapa {
+                height: 360px;
+            }
+
+            .boton {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>SENA MOTOS</h1>
+        <p>Encuentra tu camino y explora el mapa.</p>
+
+        <nav aria-label="Navegación principal">
+            <a href="{% url 'inicio' %}">Inicio</a>
+            <a href="{% url 'ubicacion' %}">Nuestra ubicación</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Nuestra ubicación</h2>
+
+            <p class="introduccion">
+                Visítanos y conoce nuestro punto de venta de motocicletas
+                Yamaha en Popayán. Consulta la dirección, comunícate con
+                nosotros o utiliza el mapa para encontrar el camino.
+            </p>
+
+            <!-- Información del concesionario -->
+            <div class="datos-negocio">
+                <h3>Sena Motos Popayán</h3>
+
+                <p>
+                    <strong>Tipo de negocio:</strong>
+                    Concesionario de motos
+                </p>
+
+                <p>
+                    <strong>Dirección:</strong>
+                    Cra. 17 #7A-35, Popayán, Cauca.
+                </p>
+
+                <p>
+                    <strong>Teléfono:</strong>
+                    <a href="tel:+573187342335">123345556</a>
+                </p>
+
+                <p>
+                    El almacén y venta de motos Yamaha más tradicional.
+                </p>
+
+                <a
+                    class="boton boton-secundario"
+                    href="https://www.google.com/maps/dir/?api=1&amp;destination=2.44132%2C-76.61524"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Cómo llegar
+                </a>
+            </div>
+
+            <h3>Explora el mapa</h3>
+
+            <p class="introduccion">
+                El mapa muestra la ubicación del concesionario. También
+                puedes pulsar «Mi ubicación» para consultar tu posición
+                actual y ver dónde te encuentras respecto al negocio.
+            </p>
+
+            <div class="acciones">
+                <button
+                    type="button"
+                    id="btn-ubicacion"
+                    class="boton">
+                    Mi ubicación
+                </button>
+
+                <button
+                    type="button"
+                    id="btn-mapa"
+                    class="boton boton-secundario">
+                    Ver ubicación del concesionario
+                </button>
+            </div>
+
+            <div id="estado" role="status" aria-live="polite">
+                Mapa listo. Estás viendo la ubicación del concesionario.
+            </div>
+
+            <div
+                id="mapa"
+                role="application"
+                aria-label="Mapa interactivo de Sena Motos Popayán">
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SENA MOTOS. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Biblioteca Leaflet -->
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin="">
+    </script>
+
+    <script>
+        // Coordenadas del concesionario.
+        // Verifica que el marcador coincida con la dirección real.
+        const centroInicial = [2.44132, -76.61524];
+
+        // Crear el mapa centrado en Remo Yamaha Popayán.
+        const mapa = L.map("mapa").setView(centroInicial, 17);
+
+        // Cargar las imágenes del mapa desde un servidor alternativo.
+        L.tileLayer("https://tile.openstreetmap.de/{z}/{x}/{y}.png", {
+            maxZoom: 18,
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">' +
+                'OpenStreetMap</a>'
+        }).addTo(mapa);
+
+        // Marcador fijo del concesionario.
+        const marcadorNegocio = L.marker(centroInicial)
+            .addTo(mapa)
+            .bindPopup(
+                "<strong>Sena Motos Popayán</strong><br>" +
+                "Cra. 17 #7A-35, Popayán<br>" +
+                '<a href="https://www.google.com/maps/dir/?api=1&destination=2.44132%2C-76.61524" ' +
+                'target="_blank" rel="noopener noreferrer">Cómo llegar</a>'
+            );
+
+        let marcadorUsuario = null;
+        let circuloPrecision = null;
+
+        const estado = document.getElementById("estado");
+        const btnUbicacion = document.getElementById("btn-ubicacion");
+        const btnMapa = document.getElementById("btn-mapa");
+
+        // Abrir el marcador del concesionario al cargar.
+        marcadorNegocio.openPopup();
+
+        // Obtener la ubicación actual del usuario.
+        btnUbicacion.addEventListener("click", function () {
+            if (!("geolocation" in navigator)) {
+                estado.textContent =
+                    "Tu navegador no permite obtener la geolocalización.";
+                return;
+            }
+
+            if (!window.isSecureContext) {
+                estado.textContent =
+                    "La geolocalización necesita una conexión segura. " +
+                    "En desarrollo local puedes utilizar 127.0.0.1.";
+                return;
+            }
+
+            estado.textContent =
+                "Solicitando tu ubicación. Autoriza el permiso del navegador si aparece.";
+
+            navigator.geolocation.getCurrentPosition(
+                function (posicion) {
+                    const latitud = posicion.coords.latitude;
+                    const longitud = posicion.coords.longitude;
+                    const precision = posicion.coords.accuracy;
+
+                    const coordenadas = [latitud, longitud];
+
+                    // Ajustar la vista a la posición actual.
+                    mapa.setView(coordenadas, 16);
+
+                    // Quitar el marcador anterior del usuario.
+                    if (marcadorUsuario) {
+                        mapa.removeLayer(marcadorUsuario);
+                    }
+
+                    // Quitar el círculo de precisión anterior.
+                    if (circuloPrecision) {
+                        mapa.removeLayer(circuloPrecision);
+                    }
+
+                    // Crear el marcador de la posición actual.
+                    marcadorUsuario = L.marker(coordenadas)
+                        .addTo(mapa)
+                        .bindPopup("Tu ubicación actual aproximada.")
+                        .openPopup();
+
+                    // Mostrar el margen de precisión de la ubicación.
+                    circuloPrecision = L.circle(coordenadas, {
+                        radius: precision,
+                        color: "#e31b23",
+                        fillColor: "#e31b23",
+                        fillOpacity: 0.12,
+                        weight: 2
+                    }).addTo(mapa);
+
+                    estado.textContent =
+                        "Ubicación obtenida. Latitud: " +
+                        latitud.toFixed(6) +
+                        " | Longitud: " +
+                        longitud.toFixed(6) +
+                        " | Precisión aproximada: " +
+                        Math.round(precision) +
+                        " metros.";
+                },
+
+                function (error) {
+                    switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                            estado.textContent =
+                                "No se concedió el permiso de ubicación. " +
+                                "Permítelo desde los permisos del navegador.";
+                            break;
+
+                        case error.POSITION_UNAVAILABLE:
+                            estado.textContent =
+                                "No fue posible determinar tu ubicación. " +
+                                "Comprueba la conexión y los servicios de ubicación.";
+                            break;
+
+                        case error.TIMEOUT:
+                            estado.textContent =
+                                "La solicitud tardó demasiado. Inténtalo de nuevo.";
+                            break;
+
+                        default:
+                            estado.textContent =
+                                "Ocurrió un error al obtener la ubicación.";
+                    }
+                },
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        });
+
+        // Regresar a la ubicación del concesionario.
+        btnMapa.addEventListener("click", function () {
+            mapa.setView(centroInicial, 17);
+            marcadorNegocio.openPopup();
+
+            estado.textContent =
+                "Mostrando la ubicación de Remo Yamaha Popayán.";
+        });
+
+        // Ajustar el mapa cuando termine de renderizarse.
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                mapa.invalidateSize();
+            }, 200);
+        });
+    </script>
+</body>
+</html>

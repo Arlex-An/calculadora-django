@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#111111">
     <title>Sena Motos | Catálogo de motocicletas</title>
+
     <style>
         :root {
             --fondo: #f4f5f7;
@@ -15,7 +16,9 @@
             --borde: #e4e6eb;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -24,7 +27,10 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         .barra {
             display: flex;
@@ -42,17 +48,22 @@
             letter-spacing: -1px;
         }
 
-        .logo span { color: var(--rojo); }
+        .logo span {
+            color: var(--rojo);
+        }
 
         .nav {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 22px;
             font-size: 14px;
             font-weight: bold;
         }
 
-        .nav a:hover { color: var(--rojo); }
+        .nav a:hover {
+            color: var(--rojo);
+        }
 
         .admin {
             padding: 11px 16px;
@@ -154,7 +165,9 @@
             font-size: 14px;
         }
 
-        .filtros .boton { margin: 0; }
+        .filtros .boton {
+            margin: 0;
+        }
 
         .grid {
             display: grid;
@@ -195,7 +208,9 @@
             font-size: 13px;
         }
 
-        .tarjeta-cuerpo { padding: 20px; }
+        .tarjeta-cuerpo {
+            padding: 20px;
+        }
 
         .marca {
             color: var(--rojo);
@@ -208,6 +223,30 @@
         .tarjeta h3 {
             margin: 8px 0;
             font-size: 22px;
+        }
+
+        /* Reproductor de sonido del motor */
+        .sonido-moto {
+            padding: 12px;
+            margin-top: 14px;
+            background: #f7f7f9;
+            border: 1px solid var(--borde);
+            border-radius: 8px;
+        }
+
+        .sonido-titulo {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--oscuro);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .sonido-moto audio {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            height: 40px;
         }
 
         .detalles {
@@ -257,7 +296,9 @@
             font-size: 12px;
         }
 
-        .comparar input { width: auto; }
+        .comparar input {
+            width: auto;
+        }
 
         .vacio {
             padding: 45px 20px;
@@ -297,9 +338,13 @@
                 font-size: 12px;
             }
 
-            .hero { padding: 55px 6%; }
+            .hero {
+                padding: 55px 6%;
+            }
 
-            .contenido { width: 92%; }
+            .contenido {
+                width: 92%;
+            }
 
             .encabezado {
                 align-items: start;
@@ -310,7 +355,9 @@
                 grid-template-columns: 1fr;
             }
 
-            .foto { height: 230px; }
+            .foto {
+                height: 230px;
+            }
         }
     </style>
 </head>
@@ -324,8 +371,8 @@
         <nav class="nav">
             <a href="{% url 'inicio' %}">Catálogo</a>
             <a href="#catalogo">Modelos</a>
+            <a href="{% url 'ubicacion' %}">Nuestra ubicación</a>
 
-            <!-- Acceso al panel de gestión de motocicletas -->
             <a class="admin" href="{% url 'gestionar_motos' %}">
                 Administrar
             </a>
@@ -422,9 +469,24 @@
                             </a>
 
                             <div class="tarjeta-cuerpo">
-                                <div class="marca">{{ moto.marca.nombre }}</div>
+                                <div class="marca">
+                                    {{ moto.marca.nombre }}
+                                </div>
 
                                 <h3>{{ moto.modelo }}</h3>
+
+                                {% if moto.sonido_motor %}
+                                    <div class="sonido-moto">
+                                        <span class="sonido-titulo">
+                                            🔊 Escuchar sonido del motor
+                                        </span>
+
+                                        <audio controls preload="none">
+                                            <source src="{{ moto.sonido_motor.url }}">
+                                            Tu navegador no admite la reproducción de audio.
+                                        </audio>
+                                    </div>
+                                {% endif %}
 
                                 <div class="detalles">
                                     <span class="chip">{{ moto.anio }}</span>
